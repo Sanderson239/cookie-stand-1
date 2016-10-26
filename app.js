@@ -1,5 +1,7 @@
 'use strict';
 
+var storesArray = [];
+
 var hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
 
 function renderHTMLHeading() {
@@ -11,6 +13,7 @@ function renderHTMLHeading() {
 renderHTMLHeading();
 
 function renderHTMLTable() {
+  console.log('renderHTMLTable');
   var table = document.createElement('table');
   var main = document.getElementsByTagName('main')[0];
   main.appendChild(table);
@@ -40,13 +43,14 @@ function renderHTMLTable() {
   table.appendChild(tbody);
 };
 renderHTMLTable();
+console.log('hello world');
 
-var CookieStore = function(name, minCust, maxCust, avgCookies, dailySales) {
+var CookieStore = function(name, minCust, maxCust, avgCookies) {
   this.name = name;
   this.minCust = minCust;
   this.maxCust = maxCust;
   this.avgCookies = avgCookies;
-  this.dailySales = dailySales;
+  this.dailySales = [];
   this.randomNumCust = function(){
     return Math.floor(Math.random() * (this.maxCust - this.minCust) + this.minCust);
   };
@@ -81,19 +85,28 @@ var CookieStore = function(name, minCust, maxCust, avgCookies, dailySales) {
     td.innerText = totalSales;
     tr.appendChild(td);
   };
+  storesArray.push(this);
 };
 
-var pike = new CookieStore ('First and Pike', 23, 65, 6.3, []);
-pike.renderHTMLSales();
+var pike = new CookieStore ('First and Pike', 23, 65, 6.3);
+var airport = new CookieStore ('SeaTac Airport', 3, 24, 1.2);
+var center = new CookieStore ('Seattle Center', 11, 38, 3.7);
+var capitol = new CookieStore ('Capitol Hill', 20, 38, 2.3);
+var alki = new CookieStore ('Alki', 2, 16, 4.6);
 
-var airport = new CookieStore ('SeaTac Airport', 3, 24, 1.2, []);
-airport.renderHTMLSales();
+for (var i = 0; i < storesArray.length; i++) {
+  storesArray[i].renderHTMLSales();
+}
+var newStore = [];
+var form = document.getElementById('form');
 
-var center = new CookieStore ('Seattle Center', 11, 38, 3.7, []);
-center.renderHTMLSales();
-
-var capitol = new CookieStore ('Capitol Hill', 20, 38, 2.3, []);
-capitol.renderHTMLSales();
-
-var alki = new CookieStore ('Alki', 2, 16, 4.6, []);
-alki.renderHTMLSales();
+function harvestForm(event) {
+  event.preventDefault();
+  for (i = 1; i < 6; i++) {
+    var formBox = event.target[i].value;
+    newStore.push(formBox);
+    console.log(formBox);
+  }
+}
+form.addEventListener('submit', harvestForm, renderHTMLTable());
+storesArray.push(newStore);
